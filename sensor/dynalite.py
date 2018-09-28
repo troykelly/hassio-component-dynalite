@@ -7,7 +7,7 @@
                 eg "/config/custom_components/sensor"
 """
 
-REQUIREMENTS = ['dynalite==0.1.7']
+REQUIREMENTS = ['dynalite==0.1.8']
 DEPENDENCIES = ['mqtt']
 
 import logging
