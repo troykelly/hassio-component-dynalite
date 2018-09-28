@@ -228,7 +228,7 @@ class DynaliteSensor(Entity):
             self.getMQTTName(area=event.data['area'],
                         preset=event.data['preset']) + '/status'
         mqtt.publish(hass=self.hass, topic=topic,
-                     payload=event.data['state'], qos=0, retain=False)
+                     payload='ON', qos=0, retain=False)
 
     def allDevicesCommand(self, command):
         if command == 'STATE':
