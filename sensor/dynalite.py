@@ -211,7 +211,7 @@ class DynaliteSensor(Entity):
             'event': event.toJson(),
             'ts': time.time()
         }
-        self.hass.async_add_job(self.async_update_ha_state())
+        self.schedule_update_ha_state()
 
     def getMQTTName(self, area=None, preset=None):
         if area is None or preset is None:
@@ -277,7 +277,7 @@ class DynaliteSensor(Entity):
             }
         else:
             _LOGGER.error("No MQTT Send to %s. MQTT is not available." % topic)
-        self.hass.async_add_job(self.async_update_ha_state())
+        self.schedule_update_ha_state()
 
     async def async_added_to_hass(self):
         """Call when entity about to be added to hass."""
@@ -324,4 +324,4 @@ class DynaliteSensor(Entity):
                 elif payload == 'OFF':
                     self._dynalite.devices['area'][area].preset[preset].turnOn(
                         sendDynet=True, sendMQTT=True)
-        self.hass.async_add_job(self.async_update_ha_state())
+        self.schedule_update_ha_state()
