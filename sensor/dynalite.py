@@ -13,6 +13,7 @@ DEPENDENCIES = ['mqtt']
 import logging
 import re
 import json
+import time
 
 import voluptuous as vol
 
@@ -142,12 +143,15 @@ class DynaliteSensor(Entity):
         alphaonly = re.compile('[\W_]+')
         self.hass = hass
         self._name = config[CONF_NAME]
-        self._state = STATE_STANDBY
         self._icon = config[CONF_ICON]
         self._qos = int(config[CONF_MQTT_QOS])
-        self._dynalite = Dynalite(config=config, loop=hass.loop)
+        self._lastMQTTOut = None
+        self._lastMQTTIn = None
+        self._lastDynetOut = None
+        self._lastDynetIn = None
         self._discoveryTopic = config['discovery_topic']
         self._mqttTopic = config['device_topic']
+        self._dynalite = Dynalite(config=config, loop=hass.loop)
         eventHandler = self._dynalite.addListener(
             listenerFunction=self.handleEvent)
         newPresetHandler = self._dynalite.addListener(
@@ -160,6 +164,7 @@ class DynaliteSensor(Entity):
         mqtt.subscribe(hass, self._mqttTopic + '/#',
                        self.mqttReceived, self._qos)
         self._dynalite.start()
+        self._state = 'Connected'
 
     @property
     def should_poll(self):
@@ -174,16 +179,32 @@ class DynaliteSensor(Entity):
     @property
     def icon(self):
         """Return the icon to be used for this entity."""
-        return self._icon
+        if self._state is None or self._state == False:
+            return "mdi:close-circle-outline"
+        else:
+            return self._icon
 
     @property
     def is_on(self):
         """Return true if entity is on."""
         return self._state
 
+    @property
+    def device_state_attributes(self):
+        """Return the state attributes of the sensor."""
+        attr = {}
+        attr['LastMQTTIn'] = self._lastMQTTIn
+        attr['lastMQTTOut'] = self._lastMQTTOut
+        attr['LastDynetIn'] = self._lastDynetIn
+        attr['LastDynetOut'] = self._lastDynetOut
+        return attr
+
     def handleEvent(self, event=None, dynalite=None):
-        # LOG.info("Received Event: %s" % event.eventType)
-        _LOGGER.debug(event.toJson())
+        self._lastDynetIn = {
+            'event': event,
+            'ts': time.time()
+        }
+        self.async_update_ha_state()
 
     def getMQTTName(self, area=None, preset=None):
         if area is None or preset is None:
@@ -218,21 +239,39 @@ class DynaliteSensor(Entity):
         payload = DiscoveryPayload(
             topic=self._mqttTopic, mqttName=mqttName, lightName=event.data['name']).getPayload()
         payloadBytes = str.encode(payload)
-        if mqtt:
-            mqtt.publish(hass=self.hass, topic=discoveryTopic,
-                         payload=payloadBytes, qos=0, retain=False)
+        self.mqttPublish(topic=discoveryTopic, payload=payloadBytes)
 
     def handlePresetChange(self, event=None, dynalite=None):
         _LOGGER.error(event)
         topic = self._mqttTopic + '/' + \
             self.getMQTTName(
                 area=event.data['area'], preset=event.data['preset']) + '/status'
-        mqtt.publish(hass=self.hass, topic=topic,
-                     payload=event.data['state'], qos=0, retain=False)
+        self.mqttPublish(topic=topic, payload=event.data['state'])
 
     def allDevicesCommand(self, command):
         if command == 'STATE':
             self._dynalite.state()
+
+    def mqttPublish(topic=None, payload=None, qos=None, retain=None):
+        if topic is None:
+            topic = self._mqttTopic + '/unknown'
+        if payload is None:
+            payload = ""
+        if qos is None:
+            qos = self._qos
+        if retain is None:
+            retain = False
+        if mqtt:
+            mqtt.publish(hass=self.hass, topic=topic,
+                         payload=payload, qos=qos, retain=retain)
+            self._lastMQTTOut = {
+                'topic': topic,
+                'payload': payload,
+                'ts': time.time()
+            }
+        else
+        _LOGGER.error("No MQTT Send to %s. MQTT is not available." % topic)
+        self.async_update_ha_state()
 
     async def async_added_to_hass(self):
         """Call when entity about to be added to hass."""
@@ -252,6 +291,11 @@ class DynaliteSensor(Entity):
 
     def mqttReceived(self, topic, payload, qos):
         """A new MQTT message has been received."""
+        self._lastMQTTIn = {
+            'topic': topic,
+            'payload': payload,
+            'ts': time.time()
+        }
         if not topic.startswith(self._mqttTopic + '/'):
             _LOGGER.warning("Ignoring topic %s" % topic)
             return
@@ -269,7 +313,9 @@ class DynaliteSensor(Entity):
                 area = areaPreset['area']
                 preset = areaPreset['preset']
                 if payload == 'ON':
-                    self._dynalite.devices['area'][area].preset[preset].turnOn(sendDynet=True,sendMQTT=True)
+                    self._dynalite.devices['area'][area].preset[preset].turnOn(
+                        sendDynet=True, sendMQTT=True)
                 elif payload == 'OFF':
-                    self._dynalite.devices['area'][area].preset[preset].turnOn(sendDynet=True,sendMQTT=True)
+                    self._dynalite.devices['area'][area].preset[preset].turnOn(
+                        sendDynet=True, sendMQTT=True)
         self.async_update_ha_state()
