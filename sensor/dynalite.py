@@ -7,7 +7,7 @@
                 eg "/config/custom_components/sensor"
 """
 
-REQUIREMENTS = ['dynalite==0.1.10']
+REQUIREMENTS = ['dynalite==0.1.12']
 DEPENDENCIES = ['mqtt']
 
 import logging
@@ -140,7 +140,6 @@ class DynaliteSensor(Entity):
         """Initialize the gateway."""
         from dynalite_lib import Dynalite
         alphaonly = re.compile('[\W_]+')
-        _LOGGER.error(json.dumps(config))
         self.hass = hass
         self._name = config[CONF_NAME]
         self._state = STATE_STANDBY
@@ -224,6 +223,7 @@ class DynaliteSensor(Entity):
                          payload=payloadBytes, qos=0, retain=False)
 
     def handlePresetChange(self, event=None, dynalite=None):
+        _LOGGER.error(event)
         topic = self._mqttTopic + '/' + \
             self.getMQTTName(area=event.data['area'],
                         preset=event.data['preset']) + '/status'
