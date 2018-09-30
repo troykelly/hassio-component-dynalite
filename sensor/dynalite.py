@@ -269,9 +269,7 @@ class DynaliteSensor(Entity):
                 area = areaPreset['area']
                 preset = areaPreset['preset']
                 if payload == 'ON':
-                    self._dynalite.devices['area'][area].preset[preset].turnOn(
-                        send=True)
+                    self._dynalite.devices['area'][area].preset[preset].turnOn(sendDynet=True,sendMQTT=True)
                 elif payload == 'OFF':
-                    self._dynalite.devices['area'][area].preset[preset].turnOn(
-                        send=True)
+                    self._dynalite.devices['area'][area].preset[preset].turnOn(sendDynet=True,sendMQTT=True)
         self.async_update_ha_state()
