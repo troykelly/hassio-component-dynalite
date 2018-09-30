@@ -204,7 +204,7 @@ class DynaliteSensor(Entity):
 
     def handleEvent(self, event=None, dynalite=None):
         self._lastDynetIn = {
-            'event': event,
+            'event': event.toJson(),
             'ts': time.time()
         }
         self.hass.async_add_job(self.async_update_ha_state())
