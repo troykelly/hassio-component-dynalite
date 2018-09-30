@@ -252,7 +252,7 @@ class DynaliteSensor(Entity):
         if command == 'STATE':
             self._dynalite.state()
 
-    def mqttPublish(topic=None, payload=None, qos=None, retain=None):
+    def mqttPublish(self, topic=None, payload=None, qos=None, retain=None):
         if topic is None:
             topic = self._mqttTopic + '/unknown'
         if payload is None:
@@ -269,8 +269,8 @@ class DynaliteSensor(Entity):
                 'payload': payload,
                 'ts': time.time()
             }
-        else
-        _LOGGER.error("No MQTT Send to %s. MQTT is not available." % topic)
+        else:
+            _LOGGER.error("No MQTT Send to %s. MQTT is not available." % topic)
         self.async_update_ha_state()
 
     async def async_added_to_hass(self):
