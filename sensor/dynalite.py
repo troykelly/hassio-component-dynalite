@@ -242,7 +242,6 @@ class DynaliteSensor(Entity):
         self.mqttPublish(topic=discoveryTopic, payload=payloadBytes)
 
     def handlePresetChange(self, event=None, dynalite=None):
-        _LOGGER.error(event)
         topic = self._mqttTopic + '/' + \
             self.getMQTTName(
                 area=event.data['area'], preset=event.data['preset']) + '/status'
