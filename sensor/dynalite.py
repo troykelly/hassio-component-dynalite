@@ -202,6 +202,10 @@ class DynaliteSensor(Entity):
         attr['LastDynetOut'] = self._lastDynetOut
         return attr
 
+    @property
+    def state(self):
+        return self._state
+
     def handleEvent(self, event=None, dynalite=None):
         self._lastDynetIn = {
             'event': event.toJson(),
