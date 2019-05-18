@@ -1,15 +1,3 @@
-"""
-@ Author      : Troy Kelly
-@ Date        : 27 Sept 2018
-@ Description : Dynalite Sensor - Philips Dynalite to MQTT gateway
-
-@ Notes:        This file needs to be within your custom_components folder.
-                eg "/config/custom_components/sensor"
-"""
-
-REQUIREMENTS = ['dynalite==0.1.12']
-DEPENDENCIES = ['mqtt']
-
 import logging
 import re
 import json
@@ -31,6 +19,9 @@ import homeassistant.helpers.config_validation as cv
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 
 _LOGGER = logging.getLogger(__name__)
+
+# The domain of your component. Should be equal to the name of your component.
+DOMAIN = "mqtt_dynalite"
 
 CONF_LOGLEVEL = 'log_level'
 CONF_AREA = 'area'
@@ -70,6 +61,10 @@ AREA_SCHEMA = vol.Schema({
     cv.slug: vol.Any(AREA_DATA_SCHEMA, None)
 })
 
+PLATFORM_DEFAULTS_SCHEMA = vol.Schema({
+    vol.Optional(CONF_FADE): cv.string
+})
+
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
     vol.Required(CONF_HOST): cv.string,
@@ -79,7 +74,9 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_MQTT_DEVICE_TOPIC, default=DEFAULT_DEVICE_TOPIC): cv.string,
     vol.Optional(CONF_AREA): AREA_SCHEMA,
     vol.Optional(CONF_ICON, default=DEFAULT_ICON): cv.string,
-    vol.Optional(CONF_MQTT_QOS, default=DEFAULT_MQTT_QOS): cv.string
+    vol.Optional(CONF_MQTT_QOS, default=DEFAULT_MQTT_QOS): cv.string,
+    vol.Optional(CONF_DEFAULT): PLATFORM_DEFAULTS_SCHEMA,
+    vol.Optional(CONF_PRESET): PRESET_SCHEMA
 })
 
 
@@ -114,12 +111,15 @@ class DiscoveryPayload(object):
         elif mqttName is None and lightName is not None:
             mqttName = lightName.replace(" ", "_").lower()
 
-        if lightName is not None:
-            self.friendly_name = lightName
-        else:
-            self.friendly_name = "Unknown Light"
+        # if lightName is not None:
+        #     self.friendly_name = lightName
+        # else:
+        #     self.friendly_name = "Unknown Light"
 
-        self.name = self.friendly_name
+        if lightName is not None:
+            self.name = lightName
+        else:
+            self.name = "Unknown Light"
 
         self.state_topic += mqttName + '/status'
         self.command_topic += mqttName + '/switch'
@@ -263,6 +263,9 @@ class DynaliteSensor(Entity):
             topic = self._mqttTopic + '/unknown'
         if payload is None:
             payload = ""
+        else:
+            if isinstance(payload, bytes):
+                payload = payload.decode()
         if qos is None:
             qos = self._qos
         if retain is None:

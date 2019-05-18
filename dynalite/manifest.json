@@ -1,0 +1,8 @@
+{
+  "domain": "dynalite",
+  "name": "MQTT Integration for Philips Dynalite",
+  "documentation": "https://github.com/troykelly/hassio-component-dynalite/wiki",
+  "dependencies": ["mqtt"],
+  "codeowners": ["troykelly"],
+  "requirements": ["dynalite==0.1.12"]
+}
