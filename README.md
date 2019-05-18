@@ -360,3 +360,7 @@ sensors:
       default:
         fade: 2
 ```
+## Release Notes
+Date | Version | Notes
+-|:-:|-
+20190519 | [0.0.2]([https://raw.githubusercontent.com/troykelly/hassio-component-dynalite/c245fdeeac86a29d6535bd6545be65dc0d04eec4/dynalite/sensor.py](https://raw.githubusercontent.com/troykelly/hassio-component-dynalite/c245fdeeac86a29d6535bd6545be65dc0d04eec4/dynalite/sensor.py)) | Updated for new Home Assistant component requirements.

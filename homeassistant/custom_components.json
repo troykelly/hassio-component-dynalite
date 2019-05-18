@@ -1,0 +1,14 @@
+{
+  "sensor.dynalite": {
+    "updated_at": "2019-05-19",
+    "version": "0.0.2",
+    "local_location": "/custom_components/dynalite/__init__.py",
+    "remote_location": "https://raw.githubusercontent.com/troykelly/hassio-component-dynalite/master/dynalite/__init__.py",
+    "visit_repo": "https://github.com/troykelly/hassio-component-dynalite",
+    "changelog": "https://github.com/troykelly/hassio-component-dynalite/blob/master/README.md#release-notes",
+    "resources": [
+      "https://raw.githubusercontent.com/troykelly/hassio-component-dynalite/master/dynalite/sensor.py",
+      "https://raw.githubusercontent.com/troykelly/hassio-component-dynalite/master/dynalite/manifest.json"
+    ]
+  }
+}
