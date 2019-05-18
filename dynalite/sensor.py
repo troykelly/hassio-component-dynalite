@@ -21,7 +21,7 @@ from homeassistant.components.sensor import PLATFORM_SCHEMA
 _LOGGER = logging.getLogger(__name__)
 
 # The domain of your component. Should be equal to the name of your component.
-DOMAIN = "mqtt_dynalite"
+DOMAIN = "dynalite"
 
 CONF_LOGLEVEL = 'log_level'
 CONF_AREA = 'area'
