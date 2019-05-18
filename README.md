@@ -1,4 +1,5 @@
 
+
 # Home Assistant Component - Philips Dynalite to MQTT
 
 > Bridging the RS485 world of Philips Dynalite with the rest of the home
@@ -12,7 +13,17 @@ This is a component for use with [Home Assistant](https://home-assistant.io/comp
 reliable and robust yourself.**
 
 ## Installation
+### Manual
 Until somebody wants to integrate this into Home Assistant - you will need to download or clone this repo and place the `dynalite` folder in your `custom_components` folder. Configuration is all via Home Assistant's config files - so please don't try and edit the contents of the component itself.
+### (Sort Of) Automatic
+Add the following to your configuration
+```yaml
+custom_updater:
+  track:
+    - components
+  component_urls:
+    - https://raw.githubusercontent.com/troykelly/hassio-component-dynalite/master/homeassistant/custom_components.json
+```
 
 ## Configuration
 This is a messy one to configure because getting information out of Dynalite is near on impossible. You must know the configuration and topology of your network to be able to integrate with it - this isn't a "*plug and play*" scenario.
@@ -363,4 +374,4 @@ sensors:
 ## Release Notes
 Date | Version | Notes
 -|:-:|-
-20190519 | [0.0.2]([https://raw.githubusercontent.com/troykelly/hassio-component-dynalite/c245fdeeac86a29d6535bd6545be65dc0d04eec4/dynalite/sensor.py](https://raw.githubusercontent.com/troykelly/hassio-component-dynalite/c245fdeeac86a29d6535bd6545be65dc0d04eec4/dynalite/sensor.py)) | Updated for new Home Assistant component requirements.
+20190519 | [0.0.2]([https://raw.githubusercontent.com/troykelly/hassio-component-dynalite/c245fdeeac86a29d6535bd6545be65dc0d04eec4/dynalite/sensor.py](https://raw.githubusercontent.com/troykelly/hassio-component-dynalite/c245fdeeac86a29d6535bd6545be65dc0d04eec4/dynalite/sensor.py) | Updated for new Home Assistant component requirements.
