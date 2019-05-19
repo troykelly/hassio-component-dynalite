@@ -16,7 +16,7 @@ reliable and robust yourself.**
 ### Manual
 Until somebody wants to integrate this into Home Assistant - you will need to download or clone this repo and place the `dynalite` folder in your `custom_components` folder. Configuration is all via Home Assistant's config files - so please don't try and edit the contents of the component itself.
 ### (Sort Of) Automatic
-If you are using [Custom Updater](https://custom-components.github.io/custom_updater/Installation) - add the following to your configuration, and then call `custom_updater.install`
+If you are using [Custom Updater](https://custom-components.github.io/custom_updater/Installation) - add the configuration below t, and then call `custom_updater.install`
 ```yaml
 custom_updater:
   track:
@@ -24,6 +24,7 @@ custom_updater:
   component_urls:
     - https://raw.githubusercontent.com/troykelly/hassio-component-dynalite/master/homeassistant/custom_components.json
 ```
+![Install Dynalite via Custom Updater](https://github.com/troykelly/hassio-component-dynalite/blob/master/homeassistant/install_001.png?raw=true)
 
 ## Configuration
 This is a messy one to configure because getting information out of Dynalite is near on impossible. You must know the configuration and topology of your network to be able to integrate with it - this isn't a "*plug and play*" scenario.
