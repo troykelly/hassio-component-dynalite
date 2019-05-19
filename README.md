@@ -16,7 +16,7 @@ reliable and robust yourself.**
 ### Manual
 Until somebody wants to integrate this into Home Assistant - you will need to download or clone this repo and place the `dynalite` folder in your `custom_components` folder. Configuration is all via Home Assistant's config files - so please don't try and edit the contents of the component itself.
 ### (Sort Of) Automatic
-Add the following to your configuration
+If you are using [Custom Updater](https://custom-components.github.io/custom_updater/Installation) - add the following to your configuration, and then call `custom_updater.install`
 ```yaml
 custom_updater:
   track:
