@@ -11,3 +11,5 @@ Configuration:
 To use the dynalite component you will need to add the configuration
 per the README to your configuration.yaml file
 """
+
+__version__ = '0.0.2'
