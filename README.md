@@ -7,7 +7,7 @@
 
 Communicates with Philips Dynalite systems via an IP to RS485 controller.
 
-This is a component for use with [Home Assistant](https://home-assistant.io/components/).
+This is a component for use with [Home Assistant](https://www.home-assistant.io/).
 
 **Do not purchase a Philips Dynalite IP<->485 Bridge - just get something
 reliable and robust yourself.**
